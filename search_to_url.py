@@ -31,11 +31,13 @@ def log_error(e):
 #--------------------------------------------------
 
 def search_to_vid_url(search, pages=None, length=None, hd=None):
-    path = randint(1,2)
+    path = randint(1,3)
     if path == 1:
         return spankbang_url(search, pages, length, hd)
     if path == 2:
         return pornhub_url(search, pages, length, hd)
+    if path == 3:
+        return xvideos_url(search, pages, length, hd)
 
 def spankbang_url(search, pages=None, length=None, hd=None):
     if pages:
@@ -43,15 +45,15 @@ def spankbang_url(search, pages=None, length=None, hd=None):
     else:
         page = ''
     if length:
-        length = 'min_length=' + str(length)
+        length = '&min_length=' + str(length)
     else:
         length = ''
     if hd:
-        hd = '720p=1'
+        hd = '&720p=1'
     else:
         hd = ''
 
-    search = 'https://spankbang.com/s/' + search + page + '?' + length + '&' + hd
+    search = 'https://spankbang.com/s/' + search + page + '?' + length + hd
     print(search)
     raw_html = simple_get(search)
     html = BeautifulSoup(raw_html, 'html.parser')
@@ -104,12 +106,44 @@ def pornhub_url(search, pages=None, length=None, hd=None):
 
     return url
 
+def xvideos_url(search, pages=None, length=None, hd=None):
+    if pages:
+        page = '&p=' + str(randint(0,pages-1))
+    else:
+        page = ''
+    if length:
+        length = '' # fix later
+    else:
+        length = ''
+    if hd:
+        hd = '&quality=hd'
+    else:
+        hd = ''
+
+    search = 'https://www.xvideos.com/?k=' + search.lower() + page + length + hd
+    print(search)
+    raw_html = simple_get(search)
+    html = BeautifulSoup(raw_html, 'html.parser')
+
+    # extract video pages from search page
+    narrowed_html = html.find_all(class_='thumb')
+    link_list = []
+    for i, n_html in enumerate(narrowed_html):
+        if 'video' in n_html.a["href"]:
+            link_list.append('https://www.xvideos.com' + n_html.a["href"])
+
+    # get direct link for one of the video pages
+    info_dict = ydl.extract_info(choice(link_list), download=False)
+    url = info_dict.get("url", None)
+
+    return url
+
 ydl_opts = {'format':'([protocol=https]/[protocol=http])[ext=mp4]','quiet':True,'no_warnings':True,'noplaylist':True}
 ydl = youtube_dl.YoutubeDL(ydl_opts)
 
 if __name__ == "__main__":
-    '''
     import time
+    '''
     start = time.time()
     print(pornhub_url("gina valentina", pages=3, length=10))
     print('It took {0:0.2f} seconds'.format(time.time() - start))
@@ -118,6 +152,10 @@ if __name__ == "__main__":
     print(spankbang_url("gina valentina", pages=3, length=10))
     print('It took {0:0.2f} seconds'.format(time.time() - start))
     '''
+
+    start = time.time()
+    print(xvideos_url("gina valentina", pages=3))
+    print('It took {0:0.2f} seconds'.format(time.time() - start))
 
     ''' for testing
     with open(r'D:\Anaconda\flask_server_app\out.txt', 'w', encoding='utf8') as f:

@@ -39,4 +39,4 @@ if __name__ == "__main__":
     print("Porn Matrix.exe 8080 to run on port 8080, etc.")
     PORT = sys.argv[1] if len(sys.argv) > 1 else '69'
     webbrowser.open('http://127.0.0.1:' + PORT)
-    waitress.serve(app, port=PORT)
+    waitress.serve(app, port=PORT, threads=8)
