@@ -59,10 +59,12 @@ def spankbang_url(search, pages=None, length=None, hd=None):
     html = BeautifulSoup(raw_html, 'html.parser')
 
     # extract video pages from search page
-    narrowed_html = html.find(class_='results_search')
+    narrowed_html = html.find(class_='video-list-with-ads')
     narrowed_html = narrowed_html.find_all(class_='video-item')
     for i, n_html in enumerate(narrowed_html):
         narrowed_html[i] = 'https://www.spankbang.com' + n_html.a["href"]
+
+    print(narrowed_html)
 
     # get direct link for one of the video pages
     info_dict = ydl.extract_info(choice(narrowed_html), download=False)
@@ -142,6 +144,8 @@ ydl_opts = {'format':'([protocol=https]/[protocol=http])[ext=mp4]','quiet':True,
 ydl = youtube_dl.YoutubeDL(ydl_opts)
 
 if __name__ == "__main__":
+    spankbang_url('gina valentina')
+
     import time
     '''
     start = time.time()
@@ -151,11 +155,11 @@ if __name__ == "__main__":
     start = time.time()
     print(spankbang_url("gina valentina", pages=3, length=10))
     print('It took {0:0.2f} seconds'.format(time.time() - start))
-    '''
 
     start = time.time()
     print(xvideos_url("gina valentina", pages=3))
     print('It took {0:0.2f} seconds'.format(time.time() - start))
+    '''
 
     ''' for testing
     with open(r'D:\Anaconda\flask_server_app\out.txt', 'w', encoding='utf8') as f:
