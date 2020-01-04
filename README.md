@@ -4,6 +4,9 @@ This is a Python 3 server application for viewing porn streams in a grid on your
 [donate if you enjoy my work :)](https://paypal.me/deracoslon)
 
 # Run / Build
+
+[I use Windows and I just want a build](https://github.com/pornmatrix/Porn_Matrix/releases)
+
 Intall prereqs
 
 > pip install -r requirements.txt
