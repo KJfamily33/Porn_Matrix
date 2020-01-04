@@ -62,7 +62,7 @@ It is a Flask python app with a vanilla JavaScript frontend. I am searching supp
 
 Currently you can also enter some information into the URL as GET parameters including the number of rows and columns, number of pages to search, as well as the minimum length of videos. I will integrate these parameters into the UI in the future.
 
-It supports Pornhub and Spankbang at the moment, but it can support any site that youtube-dl has an extractor for. To add new sites would mean making a function that can search the site and narrow it down to a specific video to feed into youtube-dl on the python server.
+It can support any site that youtube-dl has an extractor for. To add new sites would mean making a function that can search the site and narrow it down to a specific video to feed into youtube-dl on the python server.
 
 Some features I have in mind:
 - Interface for pasting a video url from Pornhub/Spankbang/whatever and loading it into any of the grid spots.
