@@ -31,13 +31,13 @@ def log_error(e):
 #--------------------------------------------------
 
 def search_to_vid_url(search, pages=None, length=None, hd=None):
-    path = randint(1,3)
+    path = randint(1,2)
     if path == 1:
-        return spankbang_url(search, pages, length, hd)
+        return xvideos_url(search, pages, length, hd)
     if path == 2:
         return pornhub_url(search, pages, length, hd)
     if path == 3:
-        return xvideos_url(search, pages, length, hd)
+        return spankbang_url(search, pages, length, hd)
 
 def spankbang_url(search, pages=None, length=None, hd=None):
     if pages:
@@ -63,8 +63,6 @@ def spankbang_url(search, pages=None, length=None, hd=None):
     narrowed_html = narrowed_html.find_all(class_='video-item')
     for i, n_html in enumerate(narrowed_html):
         narrowed_html[i] = 'https://www.spankbang.com' + n_html.a["href"]
-
-    print(narrowed_html)
 
     # get direct link for one of the video pages
     info_dict = ydl.extract_info(choice(narrowed_html), download=False)
@@ -144,18 +142,17 @@ ydl_opts = {'format':'([protocol=https]/[protocol=http])[ext=mp4]','quiet':True,
 ydl = youtube_dl.YoutubeDL(ydl_opts)
 
 if __name__ == "__main__":
-    spankbang_url('gina valentina')
 
     import time
     '''
     start = time.time()
     print(pornhub_url("gina valentina", pages=3, length=10))
     print('It took {0:0.2f} seconds'.format(time.time() - start))
-
+    '''
     start = time.time()
     print(spankbang_url("gina valentina", pages=3, length=10))
     print('It took {0:0.2f} seconds'.format(time.time() - start))
-
+    '''
     start = time.time()
     print(xvideos_url("gina valentina", pages=3))
     print('It took {0:0.2f} seconds'.format(time.time() - start))
