@@ -292,11 +292,11 @@ function make_search_link() {
 }
 
 function load_search_link(vid_container) {
-    build_search_link = make_search_link()
-    console.log(build_search_link)
-    fetch(build_search_link)
+    built_search_link = make_search_link()
+    console.log(built_search_link)
+    fetch(built_search_link)
         .then((response) => {return response.text()})
-        .then((data) => {vid_container.src = data})
+        .then((data) => {console.log(data);vid_container.src = data;})
         .catch((error) => {console.error(error)});
 }
 

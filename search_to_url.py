@@ -61,11 +61,12 @@ def spankbang_url(search, pages=None, length=None, hd=None):
     # extract video pages from search page
     narrowed_html = html.find(class_='video-list-with-ads')
     narrowed_html = narrowed_html.find_all(class_='video-item')
-    for i, n_html in enumerate(narrowed_html):
-        narrowed_html[i] = 'https://www.spankbang.com' + n_html.a["href"]
+    link_list = []
+    for n_html in narrowed_html:
+        link_list.append('https://www.spankbang.com' + n_html.a["href"])
 
     # get direct link for one of the video pages
-    chosen_video_url = choice(narrowed_html)
+    chosen_video_url = choice(link_list)
     print(chosen_video_url)
     info_dict = ydl.extract_info(chosen_video_url, download=False)
     url = info_dict.get("url", None)
@@ -99,11 +100,12 @@ def pornhub_url(search, pages=None, length=None, hd=None):
     # extract video pages from search page
     narrowed_html = html.find(id='videoSearchResult')
     narrowed_html = narrowed_html.find_all(class_='videoPreviewBg')
-    for i, n_html in enumerate(narrowed_html):
-        narrowed_html[i] = 'https://www.pornhub.com' + n_html.a["href"]
+    link_list = []
+    for n_html in narrowed_html:
+        link_list.append('https://www.pornhub.com' + n_html.a["href"])
 
     # get direct link for one of the video pages
-    chosen_video_url = choice(narrowed_html)
+    chosen_video_url = choice(link_list)
     print(chosen_video_url)
     info_dict = ydl.extract_info(chosen_video_url, download=False)
     url = info_dict.get("url", None)

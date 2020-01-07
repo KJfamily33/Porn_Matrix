@@ -10,6 +10,13 @@
 *  {padding: 0; margin:0; border:0;}
 body {background-color: #000000; }
 .viddy {
+    position:absolute;
+    max-height: 100%;
+    max-width: 100%;
+    min-height: 100%;
+    min-width: 100%;}
+.viddy_box {
+    position:relative;
     max-height: 100%;
     max-width: 100%;
     min-height: 100%;
@@ -137,11 +144,6 @@ button {
     <input type="text" id="search_box" size="20" placeholder="search term">
     <div id="controls">
         <input type="range" min="0" max="1" value="1" step=".01" class="slider" id="volume">
-        <div id="button_griddy">
-        {% for i in range(cols * rows) %}
-            <button id="{{ i + 1 }}"><i class="fas fa-redo-alt"></i></button>
-        {% endfor %} 
-        </div>
         <div id="main_buttons">
             <button id="toggle_mute"><i class="fas fa-volume-mute"></i></button>
             <button id="toggle_pause"><i class="fas fa-pause"></i></button>
@@ -155,7 +157,10 @@ button {
     </div>
     <div id="griddy">
         {% for i in range(cols * rows) %}
-        <video class="viddy" controls muted autoplay loop></video>
+        <div class="viddy_box">
+            <video class="viddy" controls muted autoplay loop></video>
+            <button id="{{ i + 1 }}" style="z-index: 1;position:absolute;right:0;top:0;"><i class="fas fa-redo-alt"></i></button>
+        </div>
         {% endfor %}
     </div>
 <script>
