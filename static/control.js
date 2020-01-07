@@ -1,35 +1,5 @@
-// functions to load information from urls
-function xhrSuccess() { 
-    this.callback.apply(this, this.arguments); 
-}
-
-function xhrError() { 
-    console.error(this.statusText); 
-}
-
-// invokes callback function when it returns data
-function http_get_body_async(url, callback)
-{
-    var xhr = new XMLHttpRequest();
-    xhr.callback = callback;
-    xhr.arguments = Array.prototype.slice.call(arguments, 2);
-    xhr.onload = xhrSuccess;
-    xhr.onerror = xhrError;
-    xhr.open("GET", url, true);
-    xhr.send(null);
-}
-
-function load_new_video(vid_container) {
-    vid_container.src = this.responseText;
-}
-
-// need synchronous get for static text file, whose contents we need for later calls
-function http_get_body(url)
-{
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", url, false);
-    xhr.send(null);
-    return xhr.responseText;
+function load_new_video(vid_container, url) {
+    vid_container.src = url;
 }
 
 // add random choice function to arrays
@@ -46,7 +16,7 @@ document.addEventListener("keydown", function(e) {
             if (!isNaN(e.key)) {
                 key = parseInt(e.key);
                 if (key <= rows * cols) {
-                    http_get_body_async(make_search_link(search), load_new_video, vids[key - 1]);
+                    load_search_link(vids[key - 1]);
                 }
             } else if (e.key == "ArrowLeft") {
                 fast_reverse();
@@ -61,7 +31,7 @@ document.addEventListener("keydown", function(e) {
                 bc.postMessage("end");
                 end();
             } else if (e.key.toLowerCase() == "r") {
-                load_all_vid_containers(search);
+                load_all_vid_containers();
                 bc.postMessage("reload");
             } else if (e.key.toLowerCase() == "m") {
                 bc.postMessage(["toggle_mute", localStorage.toggle_mute]);
@@ -101,7 +71,7 @@ document.addEventListener("keydown", function(e) {
 var bc = new BroadcastChannel("cross_window_control");
 bc.onmessage = function (ev) {
     if (ev.data == "reload") {
-        load_all_vid_containers(search);
+        load_all_vid_containers();
     } else if (ev.data == "fast_forward") {
         fast_forward();
     } else if (ev.data == "fast_reverse") {
@@ -261,13 +231,13 @@ document.getElementById("fast_forward").addEventListener("click", function() {
 });
 
 // reload button logic
-function load_all_vid_containers(search) {
+function load_all_vid_containers() {
     [].forEach.call(vids, function (vid) {
-        http_get_body_async(make_search_link(search), load_new_video, vid);
+        load_search_link(vid);
     })
 }
 document.getElementById("reload").addEventListener("click", function() {
-    load_all_vid_containers(search);
+    load_all_vid_containers();
     bc.postMessage("reload");
 });
 
@@ -313,7 +283,7 @@ document.getElementById("volume").addEventListener("input", function() {
 //--------------------------------------------------
 
 // construct search link based on search GET argument
-function make_search_link(search) {
+function make_search_link() {
     if (search == "default") {
         return "/search/" + search_terms.choice() + "?pages=" + pages + "&length=" + length + "&hd=" + hd;
     } else {
@@ -321,14 +291,26 @@ function make_search_link(search) {
     }
 }
 
+function load_search_link(vid_container) {
+    fetch(make_search_link())
+        .then((response) => {return response.text()})
+        .then((data) => {vid_container.src = data})
+        .catch((error) => {console.error(error)});
+}
+
 // get static list of search terms - will expand later
-search_terms = http_get_body("/static/pornstars.txt").split("\n");
+let search_terms = [];
+fetch('./static/pornstars.txt', {mode: 'no-cors'})
+    .then((response) => {return response.text()})
+    .then((data) => {search_terms.push(... data.split("\n"));
+                     load_all_vid_containers();})
+    .catch((error) => {console.error(error)});
 var vids = document.getElementsByClassName("viddy");
 
 // number button reload logic, must be after grabbing video elements
 Array.prototype.forEach.call(vids, function (vid, index) {
     document.getElementById((index + 1).toString()).addEventListener("click", function() {
-        http_get_body_async(make_search_link(search), load_new_video, vid);
+        load_search_link(vid);
     })
 })
 
@@ -389,6 +371,3 @@ if (is_touch_device()) {
         toggleFullScreen();
     });
 }
-
-// load videos on page load
-load_all_vid_containers(search);
