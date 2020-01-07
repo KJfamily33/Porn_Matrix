@@ -292,7 +292,9 @@ function make_search_link() {
 }
 
 function load_search_link(vid_container) {
-    fetch(make_search_link())
+    build_search_link = make_search_link()
+    console.log(build_search_link)
+    fetch(build_search_link)
         .then((response) => {return response.text()})
         .then((data) => {vid_container.src = data})
         .catch((error) => {console.error(error)});
