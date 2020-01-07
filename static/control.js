@@ -233,7 +233,11 @@ document.getElementById("toggle_pause").addEventListener("click", function() {
 // fast reverse button logic
 function fast_reverse() {
     [].forEach.call(vids, function (vid) {
-        vid.currentTime -= 30;
+        if (vid.currentTime >= 30) {
+            vid.currentTime -= 30;
+        } else {
+            vid.currentTime = vid.duration - ((30 - vid.currentTime) % vid.duration);
+        }
     })
 }
 document.getElementById("fast_reverse").addEventListener("click", function() {
@@ -244,7 +248,11 @@ document.getElementById("fast_reverse").addEventListener("click", function() {
 // fast forward button logic
 function fast_forward() {
     [].forEach.call(vids, function (vid) {
-        vid.currentTime += 30;
+        if (vid.duration - vid.currentTime >= 30) {
+            vid.currentTime += 30;
+        } else {
+            vid.currentTime = (30 - (vid.duration - vid.currentTime)) % vid.duration;
+        }
     })
 }
 document.getElementById("fast_forward").addEventListener("click", function() {
