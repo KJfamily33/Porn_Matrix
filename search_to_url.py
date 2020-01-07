@@ -112,7 +112,12 @@ def xvideos_url(search, pages=None, length=None, hd=None):
     else:
         page = ''
     if length:
-        length = '' # fix later
+        if int(length) >= 20:
+            length = '&durf=20min_more'
+        elif int(length) >= 10:
+            length = '&durf=10-20min'
+        else:
+            length = ''
     else:
         length = ''
     if hd:

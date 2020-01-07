@@ -11,8 +11,8 @@ app.jinja_env.lstrip_blocks = True
 def main_page():
     cols = int(request.args.get("cols", default=3))
     rows = int(request.args.get("rows", default=3))
-    pages = int(request.args.get("pages", default=1))
-    length = int(request.args.get("length", default=0))
+    pages = int(request.args.get("pages", default=2))
+    length = int(request.args.get("length", default=10))
     hd = int(request.args.get("hd", default=1))
     search = request.args.get("search", default="default")
     return render_template("vid_grid.html",
