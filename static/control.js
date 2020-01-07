@@ -158,13 +158,13 @@ function toggle_mute(mute_state) {
     }
     if (localStorage.toggle_mute == "muted") {
         document.getElementById("toggle_mute").innerHTML = '<i class="fas fa-volume-up">';
-        [].forEach.call(vids, function (vid) {
+        vids.forEach.call(function (vid) {
             vid.muted = false;
         })
         localStorage.toggle_mute = "unmuted";
     } else {
         document.getElementById("toggle_mute").innerHTML = '<i class="fas fa-volume-mute">';
-        [].forEach.call(vids, function (vid) {
+        vids.forEach.call(function (vid) {
             vid.muted = true;
         })
         localStorage.toggle_mute = "muted";
@@ -183,13 +183,13 @@ function toggle_pause(pause_state) {
     }
     if (localStorage.toggle_pause == "playing") {
         document.getElementById("toggle_pause").innerHTML = '<i class="fas fa-play">';
-        [].forEach.call(vids, function (vid) {
+        vids.forEach.call(function (vid) {
             vid.pause();
         })
         localStorage.toggle_pause = "paused";
     } else {
         document.getElementById("toggle_pause").innerHTML = '<i class="fas fa-pause">';
-        [].forEach.call(vids, function (vid) {
+        vids.forEach.call(function (vid) {
             vid.play();
         })
         localStorage.toggle_pause = "playing";
@@ -202,7 +202,7 @@ document.getElementById("toggle_pause").addEventListener("click", function() {
 
 // fast reverse button logic
 function fast_reverse() {
-    [].forEach.call(vids, function (vid) {
+    vids.forEach.call(function (vid) {
         if (vid.currentTime >= 30) {
             vid.currentTime -= 30;
         } else {
@@ -217,7 +217,7 @@ document.getElementById("fast_reverse").addEventListener("click", function() {
 
 // fast forward button logic
 function fast_forward() {
-    [].forEach.call(vids, function (vid) {
+    vids.forEach.call(function (vid) {
         if (vid.duration - vid.currentTime >= 30) {
             vid.currentTime += 30;
         } else {
@@ -232,7 +232,7 @@ document.getElementById("fast_forward").addEventListener("click", function() {
 
 // reload button logic
 function load_all_vid_containers() {
-    [].forEach.call(vids, function (vid) {
+    vids.forEach.call(function (vid) {
         load_search_link(vid);
     })
 }
@@ -243,7 +243,7 @@ document.getElementById("reload").addEventListener("click", function() {
 
 // beginning button logic
 function beginning() {
-    [].forEach.call(vids, function (vid) {
+    vids.forEach.call(function (vid) {
         vid.currentTime = 0;
     })
 }
@@ -254,7 +254,7 @@ document.getElementById("beginning").addEventListener("click", function() {
 
 // end button logic
 function end() {
-    [].forEach.call(vids, function (vid) {
+    vids.forEach.call(function (vid) {
         vid.currentTime = vid.duration - 10;
     })
 }
@@ -271,7 +271,7 @@ document.getElementById("search_box").addEventListener("input", function() {
 
 // slider logic
 function change_volume(volume) {
-    [].forEach.call(vids, function (vid) {
+    vids.forEach.call(function (vid) {
         vid.volume = volume;
     })
 }
@@ -310,7 +310,7 @@ fetch('./static/pornstars.txt', {mode: 'no-cors'})
 var vids = document.getElementsByClassName("viddy");
 
 // number button reload logic, must be after grabbing video elements
-Array.prototype.forEach.call(vids, function (vid, index) {
+vids.forEach.call(function (vid, index) {
     document.getElementById((index + 1).toString()).addEventListener("click", function() {
         load_search_link(vid);
     })
