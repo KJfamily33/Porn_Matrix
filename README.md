@@ -25,7 +25,7 @@ Change port
 
 Build to build folder, run exe - works the same as above
 
-> python setup.py build
+> python build_to_exe.py build
 
 Run exe from build folder and change port
 

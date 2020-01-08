@@ -92,11 +92,6 @@ def pornhub_url(search, pages=None, length=None, hd=None):
     raw_html = simple_get(search)
     html = BeautifulSoup(raw_html, 'html.parser')
 
-    ''' testing
-    with open(r'.\out.txt', 'w', encoding='utf8') as f:
-        f.write(html.prettify())
-    '''
-
     # extract video pages from search page
     narrowed_html = html.find(id='videoSearchResult')
     narrowed_html = narrowed_html.find_all(class_='videoPreviewBg')
@@ -161,17 +156,16 @@ if __name__ == "__main__":
     start = time.time()
     print(pornhub_url("gina valentina", pages=3, length=10))
     print('It took {0:0.2f} seconds'.format(time.time() - start))
-    '''
+    
     start = time.time()
     print(spankbang_url("gina valentina", pages=3, length=10))
     print('It took {0:0.2f} seconds'.format(time.time() - start))
-    '''
+    
     start = time.time()
     print(xvideos_url("gina valentina", pages=3))
     print('It took {0:0.2f} seconds'.format(time.time() - start))
-    '''
-
-    ''' for testing
+    
+    for testing
     with open(r'D:\Anaconda\flask_server_app\out.txt', 'w', encoding='utf8') as f:
         f.write(html.prettify())
     '''
