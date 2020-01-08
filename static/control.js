@@ -302,7 +302,7 @@ function load_search_link(vid_container) {
 
 // get static list of search terms - will expand later
 let search_terms = [];
-let vids = [... document.getElementsByClassName("viddy")];
+let vids = [... document.getElementsByTagName("video")];
 fetch('./static/pornstars.txt', {mode: 'no-cors'})
     .then((response) => {return response.text()})
     .then((data) => {search_terms.push(... data.split("\n"));
