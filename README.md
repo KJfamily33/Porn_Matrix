@@ -3,6 +3,8 @@ This is a Python 3 server application for viewing porn streams in a grid on your
 
 [donate if you enjoy my work :)](https://paypal.me/deracoslon)
 
+![Sample image](https://i.imgur.com/n3HoJpk.png)
+
 # Run / Build
 
 [I use Windows and I just want an exe](https://github.com/pornmatrix/Porn_Matrix/releases)
@@ -30,9 +32,6 @@ Build to build folder, run exe - works the same as above
 Run exe from build folder and change port
 
 > porn_matrix.exe 8080
-
-In action:
-https://i.imgur.com/n3HoJpk.png
 
 # Hotkeys:
 ```
