@@ -97,10 +97,14 @@ bc.onmessage = function (ev) {
 }
 
 // toggle controls logic
+all_buttons = [... document.getElementsByTagName("button")]
 if (localStorage.toggle_controls === undefined) {
     localStorage.toggle_controls = "visible";
 } else if (localStorage.toggle_controls == "hidden") {
     document.getElementById("controls").style.display = "none";
+    all_buttons.forEach((btn) => {
+        btn.style.display = "none";
+    })
 }
 function toggle_controls(control_state) {
     if (control_state !== undefined) {
@@ -108,9 +112,15 @@ function toggle_controls(control_state) {
     }
     if (localStorage.toggle_controls == "hidden") {
         document.getElementById("controls").style.display = "table";
+        all_buttons.forEach((btn) => {
+            btn.style.display = "table-cell";
+        })
         localStorage.toggle_controls = "visible";
     } else {
         document.getElementById("controls").style.display = "none";
+        all_buttons.forEach((btn) => {
+            btn.style.display = "none";
+        })
         localStorage.toggle_controls = "hidden";
     }
 }
