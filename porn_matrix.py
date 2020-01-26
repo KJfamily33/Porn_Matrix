@@ -9,14 +9,13 @@ app.jinja_env.lstrip_blocks = True
 
 @app.route("/")
 def main_page():
-    cols = int(request.args.get("cols", default=3))
-    rows = int(request.args.get("rows", default=3))
-    results = int(request.args.get("results", default=20))
-    length = int(request.args.get("length", default=0))
-    hd = int(request.args.get("hd", default=0))
+    cols = int(request.args.get("cols", default=2))
+    rows = int(request.args.get("rows", default=2))
+    results = int(request.args.get("results", default=105))
+    length = int(request.args.get("length", default=20))
     search = request.args.get("search", default="default")
     return render_template("vid_grid.html",
-            cols=cols, rows=rows, results=results, length=length, hd=hd, search=search)
+            cols=cols, rows=rows, results=results, length=length, search=search)
 
 @app.route("/favicon.ico")
 def favicon():
@@ -25,10 +24,9 @@ def favicon():
 
 @app.route("/search/<query>")
 def direct_vid_link(query):
-    results = int(request.args.get("results", default=20))
-    length = int(request.args.get("length", default=0))
-    hd = int(request.args.get("hd", default=0))
-    direct_link = search_to_vid_url(query, results=results, length=length, hd=hd)
+    results = int(request.args.get("results", default=105))
+    length = int(request.args.get("length", default=20))
+    direct_link = search_to_vid_url(query, results=results, length=length)
     return direct_link
 
 if __name__ == "__main__":

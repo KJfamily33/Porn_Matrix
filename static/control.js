@@ -276,7 +276,7 @@ document.getElementById("end").addEventListener("click", function() {
 // search box logic
 document.getElementById("search_box").addEventListener("input", function() {
     search = this.value;
-    update_url(rows, cols, results, length, hd, search);
+    update_url(rows, cols, results, length, search);
 });
 
 // slider logic
@@ -295,9 +295,9 @@ document.getElementById("volume").addEventListener("input", function() {
 // construct search link based on search GET argument
 function make_search_link() {
     if (search == "default") {
-        return "/search/" + search_terms.choice() + "?results=" + results + "&length=" + length + "&hd=" + hd;
+        return "/search/" + search_terms.choice() + "?results=" + results + "&length=" + length;
     } else {
-        return "/search/" + search + "?results=" + results + "&length=" + length + "&hd=" + hd;
+        return "/search/" + search + "?results=" + results + "&length=" + length;
     }
 }
 
@@ -328,11 +328,11 @@ vids.forEach(function (vid, index) {
 
 // add GET values to url if not present, so it is clear to the user what can be changed
 var stateObj = {};
-function update_url(rows, cols, results, length, hd, search) {
+function update_url(rows, cols, results, length, search) {
     history.pushState(stateObj, "Porn Matrix",
-    "?rows=" + rows + "&cols=" + cols + "&results=" + results + "&length=" + length + "&hd=" + hd + "&search=" + search);
+    "?rows=" + rows + "&cols=" + cols + "&results=" + results + "&length=" + length + "&search=" + search);
 }
-update_url(rows, cols, results, length, hd, search);
+update_url(rows, cols, results, length, search);
 
 // handle touch devices
 function toggleFullScreen() {
