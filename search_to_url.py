@@ -3,7 +3,7 @@ from requests.exceptions import RequestException
 from contextlib import closing
 from bs4 import BeautifulSoup
 from random import randint, choice
-import youtube_dl, json
+import youtube_dl, json, time
 
 # Supported sites, whittled down from youtube_dl's supported extractors
 supported_sites = ["pornhub.com", "xvideos.com", "cliphunter.com", "tube8.com", "sxyprn.com", "redtube.com"]
@@ -20,7 +20,8 @@ cookies = {'SRCHHPGUSR':'HV=1580011455&ADLT=OFF'}
                               # 105 is max results, I could work around that by multiple gets,
                               # but I don't think it's necessary
 def search_to_vid_url(search, results=105, length=0, allsites=False):
-    
+    start = time.time()
+
     # If allsites is true, search with form
     # "search terms AND (site:ph.com OR site:xvids.com)"
     if allsites:
@@ -88,7 +89,7 @@ def search_to_vid_url(search, results=105, length=0, allsites=False):
         
 
 
-    print(random_n, " MP4 URL: ", mp4_url)
+    print(random_n, " MP4 URL: ", mp4_url, ' {0:0.2f} seconds'.format(time.time() - start))
     return mp4_url
     
 
@@ -122,8 +123,5 @@ def log_error(e):
 
 # test omegalul
 if __name__ == "__main__":
-    import time
-    
     start = time.time()
     url = search_to_vid_url("emma mae")
-    print('It took {0:0.2f} seconds'.format(time.time() - start))
