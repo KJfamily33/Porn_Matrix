@@ -13,6 +13,10 @@ Intall prereqs
 
 > pip install -r requirements.txt
 
+Keep up to date, particularly for youtube_dl
+
+> pip install -r requirements.txt --update
+
 If you have issues installing cx_freeze on python 3.7, try this - thanks Slurgie from the bodybuilding.com forums
 
 > pip install --upgrade git+https://github.com/anthony-tuininga/cx_Freeze.git@master
@@ -59,7 +63,7 @@ control windows simultaneously
 # Tech details
 It is a Flask python app with a vanilla JavaScript frontend. I am searching supported streaming sites with my own code. I then manipulate those queries into a list of video links and run one at random through youtube-dl to get a direct link to an mp4. I then send that to the client side, which loads that with an HTML5 Video container.
 
-Currently you can also enter some information into the URL as GET parameters including the number of rows and columns, number of pages to search, as well as the minimum length of videos. I will integrate these parameters into the UI in the future.
+Currently you can also enter some information into the URL as GET parameters including the number of rows and columns, number of results to search, as well as the minimum length of videos. I will integrate these parameters into the UI in the future.
 
 It can support any site that youtube-dl has an extractor for. To add new sites would mean making a function that can search the site and narrow it down to a specific video to feed into youtube-dl on the python server.
 

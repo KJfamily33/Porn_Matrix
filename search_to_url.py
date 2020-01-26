@@ -1,15 +1,17 @@
-from requests import get
+from requests import post
 from requests.exceptions import RequestException
 from contextlib import closing
 from bs4 import BeautifulSoup
 from random import randint, choice
-import youtube_dl
+import youtube_dl, json
 
 #--------------------------------------------------
 
 def simple_get(url):
+    cookies = {'SRCHHPGUSR':'HV=1580011455&ADLT=OFF'}
+
     try:
-        with closing(get(url, stream=True)) as resp:
+        with closing(post(url, cookies=cookies)) as resp:
             if is_good_response(resp):
                 return resp.content
             else:
@@ -30,142 +32,74 @@ def log_error(e):
 
 #--------------------------------------------------
 
-def search_to_vid_url(search, pages=None, length=None, hd=None):
-    path = randint(1,2)
-    if path == 1:
-        return xvideos_url(search, pages, length, hd)
-    if path == 2:
-        return pornhub_url(search, pages, length, hd)
-    if path == 3:
-        return spankbang_url(search, pages, length, hd)
+def search_to_vid_url(search, results=None, length=None, hd=None):
+    return bing_url(search, results, length, hd)
 
-def spankbang_url(search, pages=None, length=None, hd=None):
-    if pages:
-        page = '/' + str(randint(1,pages))
-    else:
-        page = ''
-    if length:
-        length = '&min_length=' + str(length)
+def bing_url(search, results=1, length=None, hd=None):
+    # max of count 105, will need to work around that
+    supported_sites = ["pornhub.com", "xvideos.com", "cliphunter.com"]
+    site_param = ' AND ('
+    for site in supported_sites:
+        site_param += 'site:www.' + site + ' OR '
+    site_param = site_param[:-4] + ')'
+
+    page = '&first=0&count=' + str(results)
+
+    if length and int(length) >= 20:
+        length = '+filterui:duration-long'
     else:
         length = ''
-    if hd:
-        hd = '&720p=1'
-    else:
-        hd = ''
 
-    search = 'https://spankbang.com/s/' + search + page + '?' + length + hd
-    print(search)
+    search = 'https://www.bing.com/videos/asyncv2?q=' + search.lower() + ' site:www.' + choice(supported_sites) + '&async=content' + page + '&qft=' + length
+    random_n = randint(1000,9999)
+    print(random_n, " SEARCH: ", search)
+
     raw_html = simple_get(search)
     html = BeautifulSoup(raw_html, 'html.parser')
 
-    # extract video pages from search page
-    narrowed_html = html.find(class_='video-list-with-ads')
-    narrowed_html = narrowed_html.find_all(class_='video-item')
+    # extract video results from search page
+    narrowed_html = html.find_all(class_='vrhdata')
     link_list = []
     for n_html in narrowed_html:
-        link_list.append('https://www.spankbang.com' + n_html.a["href"])
+        link_list.append(json.loads(n_html["vrhm"])["pgurl"])
 
-    # get direct link for one of the video pages
-    chosen_video_url = choice(link_list)
-    print(chosen_video_url)
-    info_dict = ydl.extract_info(chosen_video_url, download=False)
-    url = info_dict.get("url", None)
+    final_list = []
+    for site in supported_sites:
+        final_list += [l for l in link_list if site in l]
+    link_list = final_list
+    
+    print(random_n, " RESULTS: ", len(link_list))
 
-    return url
-
-def pornhub_url(search, pages=None, length=None, hd=None):
-    if pages:
-        page = 'page=' + str(randint(1,pages))
-    else:
-        page = ''
-    if length:
-        length = 'min_duration=' + str(int(length/10)*10)
-    else:
-        length = ''
-    if hd:
-        hd = 'hd=1'
-    else:
-        hd = ''
-
-    search = 'https://www.pornhub.com/video/search?search=' + search.lower() + '&' + page + '&' + length + '&' + hd
-    print(search)
-    raw_html = simple_get(search)
-    html = BeautifulSoup(raw_html, 'html.parser')
-
-    # extract video pages from search page
-    narrowed_html = html.find(id='videoSearchResult')
-    narrowed_html = narrowed_html.find_all(class_='videoPreviewBg')
-    link_list = []
-    for n_html in narrowed_html:
-        link_list.append('https://www.pornhub.com' + n_html.a["href"])
-
-    # get direct link for one of the video pages
-    chosen_video_url = choice(link_list)
-    print(chosen_video_url)
-    info_dict = ydl.extract_info(chosen_video_url, download=False)
-    url = info_dict.get("url", None)
-
-    return url
-
-def xvideos_url(search, pages=None, length=None, hd=None):
-    if pages:
-        page = '&p=' + str(randint(0,pages-1))
-    else:
-        page = ''
-    if length:
-        if int(length) >= 20:
-            length = '&durf=20min_more'
-        elif int(length) >= 10:
-            length = '&durf=10-20min'
+    # get direct link for one of the video results
+    while True:
+        if link_list:
+            v_link = choice(link_list)
+            print(random_n, " TRYING: ", v_link)
+            mp4_url = yt_dl_on_link(v_link)
+            if mp4_url:
+                break
+            link_list.remove(v_link)
         else:
-            length = ''
-    else:
-        length = ''
-    if hd:
-        hd = '&quality=hd'
-    else:
-        hd = ''
+            mp4_url = ''
+            break
 
-    search = 'https://www.xvideos.com/?k=' + search.lower() + page + length + hd
-    print(search)
-    raw_html = simple_get(search)
-    html = BeautifulSoup(raw_html, 'html.parser')
+    print(random_n, " MP4 URL: ", mp4_url)
+    return mp4_url
+    
 
-    # extract video pages from search page
-    narrowed_html = html.find_all(class_='thumb')
-    link_list = []
-    for n_html in narrowed_html:
-        if 'video' in n_html.a["href"]:
-            link_list.append('https://www.xvideos.com' + n_html.a["href"])
+def yt_dl_on_link(vid_link):
+    try:
+        return ydl.extract_info(vid_link, download=False).get("url", None)
+    except:
+        return 0
 
-    # get direct link for one of the video pages
-    chosen_video_url = choice(link_list)
-    print(chosen_video_url)
-    info_dict = ydl.extract_info(chosen_video_url, download=False)
-    url = info_dict.get("url", None)
-
-    return url
 
 ydl_opts = {'format':'([protocol=https]/[protocol=http])[ext=mp4]','quiet':True,'no_warnings':True,'noplaylist':True}
 ydl = youtube_dl.YoutubeDL(ydl_opts)
 
 if __name__ == "__main__":
-
     import time
-    '''
-    start = time.time()
-    print(pornhub_url("gina valentina", pages=3, length=10))
-    print('It took {0:0.2f} seconds'.format(time.time() - start))
     
     start = time.time()
-    print(spankbang_url("gina valentina", pages=3, length=10))
+    url = bing_url("emma mae")
     print('It took {0:0.2f} seconds'.format(time.time() - start))
-    
-    start = time.time()
-    print(xvideos_url("gina valentina", pages=3))
-    print('It took {0:0.2f} seconds'.format(time.time() - start))
-    
-    for testing
-    with open(r'D:\Anaconda\flask_server_app\out.txt', 'w', encoding='utf8') as f:
-        f.write(html.prettify())
-    '''
