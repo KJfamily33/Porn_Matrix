@@ -1,7 +1,7 @@
 # Porn_Matrix
 This is a Python 3 server application for viewing porn streams in a grid on your browser. It loads videos based on provided search parameters. If no search terms are provided, it chooses from a list of my favorite porn stars. :)
 
-It is a Flask python app with a vanilla JavaScript frontend. I craft a bing video search string and scrape the results for video links, then pass them into youtube_dl to get a direct link to the video file, which is sent to the browser frontend.
+It is a Flask python app with a vanilla JavaScript frontend. I craft a bing video search string and scrape the results for video links, then pass them into youtube_dl to get a direct link to the video file, which is sent to the browser frontend and loaded into a video container.
 
 [donate if you enjoy my work :)](https://paypal.me/deracoslon)
 
@@ -41,20 +41,22 @@ Run exe from build folder and change port
 
 # Hotkeys:
 ```
+F11 = fullscreen
+
 m = toggle mute
-+/- = adjust volume 5%
 h = toggle help
 c = toggle controls
-enter = toggle search
-new vids will use it
-F11 = fullscreen
++/- = adjust volume 5%
+
 left arrow = go back 30s
 right arrow = go forward 30s
 down arrow = move to beginning
 up arrow = move to end
 p or pause = toggle pause/play
-r = reload all
-1-9 = load new in square #
+
+enter = toggle search
+r = load search results for all videos
+1-9 = load search results in one
 ```
 
 # Bonus Features:

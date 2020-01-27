@@ -1,12 +1,14 @@
 from os import path
 from flask import (Flask, send_from_directory,
                   render_template, request)
-from search_to_url import search_to_vid_url
+from search_to_url import get_direct_link
 
 app = Flask(__name__)
 app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
 
+# AFAIK we don't need to worry about sanitizing input
+# Flask escapes all input by default
 @app.route("/")
 def main_page():
     cols = int(request.args.get("cols", default=2))
@@ -26,7 +28,7 @@ def favicon():
 def direct_vid_link(query):
     results = int(request.args.get("results", default=105))
     length = int(request.args.get("length", default=20))
-    direct_link = search_to_vid_url(query, results=results, length=length)
+    direct_link = get_direct_link(query, results=results, length=length)
     return direct_link
 
 if __name__ == "__main__":
